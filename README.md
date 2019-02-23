@@ -1,16 +1,3 @@
 # word_game
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+This is a demonstration of using the Bloc pattern to handle state. There are two blocs - the game_bloc controls what state of play the app is in, home, playing, ending, or in the settings screen. The play_bloc has a reference to the game_bloc, and receives guesses, calculates the score, and generates new problems as the game progresses. When the play_bloc notices that the game is over, it dumps a GameOverEvent with the final score into the game_bloc's sink. 
