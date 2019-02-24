@@ -10,8 +10,12 @@ class ProblemWidget extends StatelessWidget {
     PlayBloc _playBloc = BlocProvider.of<PlayBloc>(context);
 
     return StreamBuilder<Problem>(
-        stream: _playBloc.problemStream,
+        stream: _playBloc.problemBroadcast,
         builder: (context, snapshot) {
+          if(snapshot.data == null) {
+            _playBloc.guessSink.add(InitialProblem());
+            return Container();
+          }
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[

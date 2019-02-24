@@ -3,6 +3,9 @@ import 'bloc_provider.dart';
 
 class GameBloc implements BlocBase{
 
+  int _finalScore = 0;
+  int get finalScore => _finalScore;
+
   //Stream to handle the game's status (which page to render): output of Bloc
   StreamController<GameStatus> _gameStatusController = StreamController<GameStatus>();
   StreamSink<GameStatus> get _gameStatusSink => _gameStatusController.sink;
@@ -19,12 +22,14 @@ class GameBloc implements BlocBase{
 
   void _mapEventToState(event){
     if(event is PlayGameEvent){
+
       _gameStatusSink.add(GameStatus.playing);
     }
     if (event is GoHomeEvent){
       _gameStatusSink.add(GameStatus.home);
     }
     if(event is GameOverEvent){
+      _finalScore = event.score;
       _gameStatusSink.add(GameStatus.ending);
     }
   }

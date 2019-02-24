@@ -7,11 +7,12 @@ import 'package:word_game/src/blocs/play_bloc.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
 
 class GameScreen extends StatelessWidget {
+
+  static final GameBloc _gameBloc = GameBloc();
+  static final PlayBloc _playBloc = PlayBloc(gameBloc: _gameBloc);
+
   @override
   Widget build(BuildContext context) {
-    GameBloc _gameBloc = GameBloc();
-    PlayBloc _playBloc = PlayBloc(gameBloc: _gameBloc);
-
     return BlocProvider(
       bloc: _gameBloc,
       child: BlocProvider(
@@ -19,25 +20,7 @@ class GameScreen extends StatelessWidget {
         child: StreamBuilder(
           stream: _gameBloc.gameStatus,
           builder: (BuildContext context, AsyncSnapshot<GameStatus> status) {
-            Widget _gameScreen;
-
-            switch (status.data) {
-              case GameStatus.home:
-                _gameScreen = Home();
-                break;
-              case GameStatus.playing:
-                _gameScreen = ProblemWidget();
-                break;
-              case GameStatus.ending:
-                _gameScreen = Container();
-                break;
-              case GameStatus.settings:
-                _gameScreen = Container();
-                break;
-              default:
-                _gameScreen = ErrorScreen();
-                break;
-            }
+            Widget _gameScreen = _getGameScreen(status.data);
             return _gameScreen;
           },
         ),
@@ -46,13 +29,35 @@ class GameScreen extends StatelessWidget {
   }
 }
 
-class Home extends StatelessWidget {
-  final GameBloc gameBloc;
+Widget _getGameScreen(GameStatus status) {
+  Widget screen;
+  switch (status) {
+    case GameStatus.home:
+      screen = Home();
+      break;
+    case GameStatus.playing:
+      screen = ProblemWidget();
+      break;
+    case GameStatus.ending:
+      screen = EndGameScreen();
+      break;
+    case GameStatus.settings:
+      screen = Container();
+      break;
+    default:
+      screen = ErrorScreen();
+      break;
+  }
+  return screen;
+}
 
-  Home({this.gameBloc});
+class Home extends StatelessWidget {
+  GameBloc _gameBloc;
 
   @override
   Widget build(BuildContext context) {
+    _gameBloc = BlocProvider.of<GameBloc>(context);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -63,7 +68,27 @@ class Home extends StatelessWidget {
   }
 
   void settingsPressed() => print('settings pressed');
-  void playPressed() => gameBloc.gameButton.add(PlayGameEvent());
+  void playPressed() => _gameBloc.gameButton.add(PlayGameEvent());
+}
+
+class EndGameScreen extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    GameBloc gameBloc = BlocProvider.of<GameBloc>(context);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Text('Game Over!', style: Style.BLACK_TITLE_TEXT_STYLE,),
+        Text('${gameBloc.finalScore.toString()} points', style: Style.BLACK_TITLE_TEXT_STYLE,),
+        FlatButton(
+          child: Text('Go Home', style: Style.BLACK_SUBTITLE_TEXT_STYLE,),
+          onPressed: () => gameBloc.gameButton.add(GoHomeEvent()),
+        )
+      ],
+    );
+  }
 }
 
 class ErrorScreen extends StatelessWidget {
