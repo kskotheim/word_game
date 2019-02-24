@@ -52,7 +52,7 @@ class GoHomeEvent extends GameEvent{}
 
 class GameOverEvent extends GameEvent{
   final int score;
-  GameOverEvent({this.score}) : assert(score != 0);
+  GameOverEvent({this.score});
 }
 
 enum GameStatus { home, settings, playing, ending }
