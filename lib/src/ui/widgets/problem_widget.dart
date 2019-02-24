@@ -2,47 +2,51 @@ import 'package:flutter/material.dart';
 import 'package:word_game/src/models/problem.dart';
 import 'package:word_game/src/resources/style.dart';
 import 'package:word_game/src/blocs/play_bloc.dart';
-
+import 'package:word_game/src/blocs/bloc_provider.dart';
 
 class ProblemWidget extends StatelessWidget {
-
-  final PlayBloc playBloc;
-
-  ProblemWidget({this.playBloc});
-
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Problem>(
-      stream: playBloc.problemStream,
-      builder: (context, snapshot) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            FlatButton(
-              child: _buildWordOption(snapshot.data.wordList[0]),
-              onPressed: () => _submitGuess(snapshot.data, snapshot.data.wordList[0]),
-            ),
-            FlatButton(
-              child: _buildWordOption(snapshot.data.wordList[1]),
-              onPressed: () => _submitGuess(snapshot.data, snapshot.data.wordList[1]),
-            ),
-            Column(
-              children: <Widget>[
-                Text('Score: ${snapshot.data.problemData.score}'),
-                Text('${snapshot.data.problemData.currentOfTotal[0]} of ${snapshot.data.problemData.currentOfTotal[1]}'),
-                snapshot.data.problemData.previousSolution != '' ? Text('previous solution: ${snapshot.data.problemData.previousSolution}') : Container()
-              ],
-            )
+    PlayBloc _playBloc = BlocProvider.of<PlayBloc>(context);
 
-          ],
-        );
-      }
+    return StreamBuilder<Problem>(
+        stream: _playBloc.problemStream,
+        builder: (context, snapshot) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _wordOption(0, snapshot.data, _playBloc),
+              _wordOption(1, snapshot.data, _playBloc),
+              _problemMetaInfo(snapshot.data.problemData)
+            ],
+          );
+        });
+  }
+
+  FlatButton _wordOption(int index, Problem problem, PlayBloc _playBloc) {
+    return FlatButton(
+      child: _buildWordOption(problem.wordList[index]),
+      onPressed: () =>
+          _submitGuess(problem, problem.wordList[index], _playBloc),
     );
   }
 
-  void _submitGuess(Problem problem, String guess){
+  void _submitGuess(Problem problem, String guess, PlayBloc playBloc) {
     playBloc.guessSink.add(ProblemAndGuess(problem: problem, guess: guess));
   }
 
-  Text _buildWordOption(String word) => Text(word, style: Style.BLACK_TITLE_TEXT_STYLE,);
+  Text _buildWordOption(String word) =>
+      Text(word, style: Style.BLACK_TITLE_TEXT_STYLE);
+
+  Column _problemMetaInfo(ProblemData data) {
+    return Column(
+      children: <Widget>[
+        Text('Score: ${data.score}'),
+        Text('${data.currentOfTotal[0]} of ${data.currentOfTotal[1]}'),
+        data.previousSolution != ''
+            ? Text('previous solution: ${data.previousSolution}')
+            : Container()
+      ],
+    );
+  }
 }

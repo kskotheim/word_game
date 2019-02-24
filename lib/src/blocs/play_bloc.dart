@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:word_game/src/models/problem.dart';
 import 'game_bloc.dart';
+import 'bloc_provider.dart';
 
-class PlayBloc {
+class PlayBloc implements BlocBase{
 
   final GameBloc gameBloc;
 

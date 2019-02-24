@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'bloc_provider.dart';
 
-class GameBloc {
+class GameBloc implements BlocBase{
 
   //Stream to handle the game's status (which page to render): output of Bloc
   StreamController<GameStatus> _gameStatusController = StreamController<GameStatus>();
