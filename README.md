@@ -1,16 +1,7 @@
 # word_game
 
-A new Flutter project.
+This is a demonstration of using the Bloc pattern to handle state. There are two blocs - the GameBloc controls what state of play the app is in, home, playing, ending, or in the settings screen. The PlayBloc has a reference to the GameBloc, and receives guesses, calculates the score, and generates new problems as the game progresses. When the PlayBloc notices that the game is over, it dumps a GameOverEvent with the final score into the GameBloc's sink. 
 
-## Getting Started
+The player must guess which word of a pair is more common. A game is 10 guesses.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+Random words are generated from the [english words package](https://pub.dartlang.org/packages/english_words)
