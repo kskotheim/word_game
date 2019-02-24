@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:word_game/src/ui/widgets/problem_widget.dart';
+import 'package:word_game/src/ui/widgets/endgame_widget.dart';
+import 'package:word_game/src/ui/widgets/home_widget.dart';
 import 'package:word_game/src/resources/style.dart';
 
 import 'package:word_game/src/blocs/game_bloc.dart';
@@ -51,65 +53,10 @@ Widget _getGameScreen(GameStatus status) {
   return screen;
 }
 
-class Home extends StatelessWidget {
-  GameBloc _gameBloc;
-
-  @override
-  Widget build(BuildContext context) {
-    _gameBloc = BlocProvider.of<GameBloc>(context);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        GameButton(whenPressed: playPressed, title: 'Play'),
-        GameButton(whenPressed: settingsPressed, title: 'Settings'),
-      ],
-    );
-  }
-
-  void settingsPressed() => print('settings pressed');
-  void playPressed() => _gameBloc.gameButton.add(PlayGameEvent());
-}
-
-class EndGameScreen extends StatelessWidget{
-
-  @override
-  Widget build(BuildContext context) {
-    GameBloc gameBloc = BlocProvider.of<GameBloc>(context);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Text('Game Over!', style: Style.BLACK_TITLE_TEXT_STYLE,),
-        Text('${gameBloc.finalScore.toString()} points', style: Style.BLACK_TITLE_TEXT_STYLE,),
-        FlatButton(
-          child: Text('Go Home', style: Style.BLACK_SUBTITLE_TEXT_STYLE,),
-          onPressed: () => gameBloc.gameButton.add(GoHomeEvent()),
-        )
-      ],
-    );
-  }
-}
 
 class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text('Error!');
-  }
-}
-
-class GameButton extends StatelessWidget {
-  final VoidCallback whenPressed;
-  final String title;
-
-  GameButton({this.whenPressed, this.title})
-      : assert(whenPressed != null, title != null);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: whenPressed,
-      child: Text(title, style: Style.BLACK_SUBTITLE_TEXT_STYLE),
-    );
   }
 }
