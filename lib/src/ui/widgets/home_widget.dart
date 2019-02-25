@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
 import 'package:word_game/src/blocs/game_bloc.dart';
+import 'package:word_game/src/blocs/play_bloc.dart';
 import 'package:word_game/src/resources/style.dart';
 
 class Home extends StatelessWidget {
   GameBloc _gameBloc;
+  PlayBloc _playBloc;
 
   @override
   Widget build(BuildContext context) {
     _gameBloc = BlocProvider.of<GameBloc>(context);
+    _playBloc = BlocProvider.of<PlayBloc>(context);
+    String difficulty = _playBloc.difficultyString();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         GameButton(whenPressed: playPressed, title: 'Play'),
-        GameButton(whenPressed: settingsPressed, title: 'Settings'),
+        GameButton(whenPressed: settingsPressed, title: 'Difficulty: $difficulty'),
       ],
     );
   }

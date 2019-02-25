@@ -88,6 +88,20 @@ class PlayBloc implements BlocBase {
     if(_numberOfProblemsInGame == NUM_PROBLEMS_PER_GAME_HARD) return Difficulty.hard;
     else return Difficulty.easy;
   }
+
+  String difficultyString(){
+    Difficulty diff = difficulty;
+    switch(diff){
+      case Difficulty.easy:
+        return 'Easy';
+      case Difficulty.medium:
+        return 'Medium';
+      case Difficulty.hard:
+        return 'Hard';
+      default:
+        return 'Error Finding Difficulty String';
+    }
+  }
 }
 
 enum Difficulty{easy, medium, hard}
