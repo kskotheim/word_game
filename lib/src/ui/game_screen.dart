@@ -24,9 +24,12 @@ class GameScreen extends StatelessWidget {
             Widget _gameScreen = _getGameScreen(status.data);
             return WillPopScope(
                 onWillPop: () async {
-                  if(status.data == GameStatus.home) return true;
-                  _gameBloc.gameButton.add(GoHomeEvent());
-                  return false;
+                  if(status.data == GameStatus.home) 
+                    return true;
+                  else {
+                    _gameBloc.gameButton.add(GoHomeEvent());
+                    return false;
+                  }
                 },
                 child: _gameScreen);
           },
@@ -37,30 +40,16 @@ class GameScreen extends StatelessWidget {
 }
 
 Widget _getGameScreen(GameStatus status) {
-  Widget screen;
   switch (status) {
     case GameStatus.home:
-      screen = Home();
-      break;
+      return Home();
     case GameStatus.playing:
-      screen = ProblemWidget();
-      break;
+      return ProblemWidget();
     case GameStatus.ending:
-      screen = EndGameScreen();
-      break;
+      return EndGameScreen();
     case GameStatus.settings:
-      screen = SettingsWidget();
-      break;
+      return SettingsWidget();
     default:
-      screen = ErrorScreen();
-      break;
-  }
-  return screen;
-}
-
-class ErrorScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text('Error!');
+      return Text('Error!');
   }
 }

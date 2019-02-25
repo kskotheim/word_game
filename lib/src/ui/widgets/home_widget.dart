@@ -16,14 +16,13 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     _gameBloc = BlocProvider.of<GameBloc>(context);
     _playBloc = BlocProvider.of<PlayBloc>(context);
-    String difficulty = _playBloc.difficultyString();
+    String difficulty = _playBloc.difficultyName;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Text(TITLE_STRING_1, style: Style.BLACK_TITLE_TEXT_STYLE,),
         Text(TITLE_STRING_2, style: Style.BLACK_TITLE_TEXT_STYLE,),
-
         GameButton(whenPressed: playPressed, title: 'Play'),
         GameButton(whenPressed: settingsPressed, title: 'Difficulty: $difficulty'),
       ],

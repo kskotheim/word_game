@@ -6,18 +6,10 @@ import 'package:word_game/src/blocs/bloc_provider.dart';
 class PlayBloc implements BlocBase {
   static const int POINTS_INCREASE_PER_CORRECT_ANSWER = 100;
 
-  static const int NUM_PROBLEMS_PER_GAME_EASY = 10;
-  static const int NUM_PROBLEMS_PER_GAME_MEDIUM = 15;
-  static const int NUM_PROBLEMS_PER_GAME_HARD = 20;
-  static const List<int> WORD_RANGE_EASY = [2000, 5000];
-  static const List<int> WORD_RANGE_MEDIUM = [1000, 2000];
-  static const List<int> WORD_RANGE_HARD = [1, 1000];
-
   final GameBloc gameBloc;
 
   //difficulty settings
-  int _numberOfProblemsInGame = NUM_PROBLEMS_PER_GAME_EASY;
-  List<int> _wordDifficultyRange = WORD_RANGE_EASY;  //the number of indices away paired words are allowed to be
+  Difficulty _difficulty = Difficulty.EASY;
 
   //Stream to display the current problem and problem data: Output of Bloc
   StreamController<Problem> _problemStreamController = StreamController<Problem>();
@@ -35,77 +27,48 @@ class PlayBloc implements BlocBase {
 
   void _mapEventToState(PlayBlocInput playBlocInput) {
     if (playBlocInput is InitialProblem) {
-      return _problemStreamSink.add(Problem(numberOfProblemsInGame: _numberOfProblemsInGame, wordRange: _wordDifficultyRange));
+      return _problemStreamSink.add(Problem(numberOfProblemsInGame: _difficulty.numProblemsInGame, wordRange: _difficulty.indexRange));
     }
 
     if (playBlocInput is ProblemAndGuess) {
-      String guess = playBlocInput.guess;
-      String solution = playBlocInput.problem.solution;
-      List<int> problemCount = playBlocInput.problem.problemData.currentOfTotal;
-
-      bool correct = guess == solution;
-      bool finalSolution = problemCount[0] == problemCount[1];
-      int currentScore = playBlocInput.problem.problemData.score;
-      int scoreIncrease = correct ? POINTS_INCREASE_PER_CORRECT_ANSWER : 0;
-
-      ProblemData newProblemData = ProblemData(
-          currentOfTotal: [problemCount[0] + 1, problemCount[1]],
-          previousSolution: solution,
-          score: currentScore + scoreIncrease,
-          previousSolutionCorrect: correct);
-
-      if (!finalSolution)
-        _problemStreamSink.add(Problem(problemData: newProblemData, wordRange: _wordDifficultyRange));
-      else
-        gameBloc.gameButton.add(GameOverEvent(score: currentScore + scoreIncrease));
+      _handleProblemAndGuess(playBlocInput);
     }
 
     if (playBlocInput is SetDifficulty){
-      switch (playBlocInput.difficulty){
-        case Difficulty.easy:
-          _numberOfProblemsInGame = NUM_PROBLEMS_PER_GAME_EASY;
-          _wordDifficultyRange = WORD_RANGE_EASY;
-        break;
-        case Difficulty.medium:
-          _numberOfProblemsInGame = NUM_PROBLEMS_PER_GAME_MEDIUM;
-          _wordDifficultyRange = WORD_RANGE_MEDIUM;
-        break;
-        case Difficulty.hard:
-          _numberOfProblemsInGame = NUM_PROBLEMS_PER_GAME_HARD;
-          _wordDifficultyRange = WORD_RANGE_HARD;
-        break;
-      }
+      _difficulty = playBlocInput.difficulty;
     }
   }
+
+  void _handleProblemAndGuess(ProblemAndGuess playBlocInput) {
+    String guess = playBlocInput.guess;
+    String solution = playBlocInput.problem.solution;
+    List<int> problemCount = playBlocInput.problem.problemData.currentOfTotal;
+    
+    bool correct = guess == solution;
+    bool finalSolution = problemCount[0] == problemCount[1];
+    int currentScore = playBlocInput.problem.problemData.score;
+    int scoreIncrease = correct ? POINTS_INCREASE_PER_CORRECT_ANSWER : 0;
+    
+    ProblemData newProblemData = ProblemData(
+        currentOfTotal: [problemCount[0] + 1, problemCount[1]],
+        previousSolution: solution,
+        score: currentScore + scoreIncrease,
+        previousSolutionCorrect: correct);
+    
+    if (!finalSolution)
+      _problemStreamSink.add(Problem(problemData: newProblemData, wordRange: _difficulty.indexRange));
+    else
+      gameBloc.gameButton.add(GameOverEvent(score: currentScore + scoreIncrease));
+  }
+
+  String get difficultyName => _difficulty.name;
 
   void dispose() {
     _guessController.close();
     _problemStreamController.close();
   }
 
-  Difficulty get difficulty {
-    if(_numberOfProblemsInGame == NUM_PROBLEMS_PER_GAME_EASY) return Difficulty.easy;
-    if(_numberOfProblemsInGame == NUM_PROBLEMS_PER_GAME_MEDIUM) return Difficulty.medium;
-    if(_numberOfProblemsInGame == NUM_PROBLEMS_PER_GAME_HARD) return Difficulty.hard;
-    else return Difficulty.easy;
-  }
-
-  String difficultyString(){
-    Difficulty diff = difficulty;
-    switch(diff){
-      case Difficulty.easy:
-        return 'Easy';
-      case Difficulty.medium:
-        return 'Medium';
-      case Difficulty.hard:
-        return 'Hard';
-      default:
-        return 'Error Finding Difficulty String';
-    }
-  }
 }
-
-enum Difficulty{easy, medium, hard}
 
 //Input type for this bloc
 
@@ -125,4 +88,17 @@ class SetDifficulty extends PlayBlocInput {
   final Difficulty difficulty;
 
   SetDifficulty({this.difficulty}) : assert (difficulty != null);
+}
+
+class Difficulty{
+
+  static final Difficulty EASY = Difficulty(name: 'Easy', numProblemsInGame: 10, indexRange: [2000,5000]);
+  static final Difficulty MEDIUM = Difficulty(name: 'Medium', numProblemsInGame: 15, indexRange: [1000,2000]);
+  static final Difficulty HARD = Difficulty(name: 'Hard', numProblemsInGame: 20, indexRange: [1,1000]);
+
+  final String name;
+  final int numProblemsInGame;
+  final List<int> indexRange;
+
+  Difficulty({this.name, this.numProblemsInGame, this.indexRange});
 }

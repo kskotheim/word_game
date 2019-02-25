@@ -22,16 +22,16 @@ class SettingsWidget extends StatelessWidget {
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            _difficultyButton(Difficulty.easy, 'Easy'),
-            _difficultyButton(Difficulty.medium, 'Medium'),
-            _difficultyButton(Difficulty.hard, 'Hard'),
+            _difficultyButton(Difficulty.EASY),
+            _difficultyButton(Difficulty.MEDIUM),
+            _difficultyButton(Difficulty.HARD),
           ],
         );
       }
     );
   }
 
-  RaisedButton _difficultyButton(Difficulty difficulty, String difficultyString){
+  RaisedButton _difficultyButton(Difficulty difficulty){
     return RaisedButton(
       color: Style.BUTTON_COLOR,
       child: Container(
@@ -40,8 +40,8 @@ class SettingsWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            playBloc.difficulty == difficulty ? Icon(Icons.check) : Container(),
-            Text(difficultyString, style: Style.BLACK_SUBTITLE_TEXT_STYLE,),
+            playBloc.difficultyName == difficulty.name ? Icon(Icons.check) : Container(),
+            Text(difficulty.name, style: Style.BLACK_SUBTITLE_TEXT_STYLE,),
             Container()
           ],
         ),
