@@ -41,7 +41,7 @@ class ProblemWidget extends StatelessWidget {
 
   Widget _buildWordOption(String word) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: Style.BUTTON_PADDING,
         child: Text(word, style: Style.BLACK_TITLE_TEXT_STYLE),
       );
   }

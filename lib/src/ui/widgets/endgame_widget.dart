@@ -17,6 +17,7 @@ class EndGameScreen extends StatelessWidget{
         Text('Game Over!', style: Style.BLACK_TITLE_TEXT_STYLE,),
         Text('${gameBloc.finalScore.toString()} points', style: Style.BLACK_TITLE_TEXT_STYLE,),
         FlatButton(
+          padding: Style.BUTTON_PADDING,
           child: Text('Go Home', style: Style.BLACK_SUBTITLE_TEXT_STYLE,),
           onPressed: () => gameBloc.gameButton.add(GoHomeEvent()),
         )

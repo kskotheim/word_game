@@ -37,6 +37,7 @@ class GameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+      padding: Style.BUTTON_PADDING,
       onPressed: whenPressed,
       child: Text(title, style: Style.BLACK_SUBTITLE_TEXT_STYLE),
     );
