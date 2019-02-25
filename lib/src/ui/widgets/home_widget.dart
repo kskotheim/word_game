@@ -19,7 +19,7 @@ class Home extends StatelessWidget {
     );
   }
 
-  void settingsPressed() => print('settings pressed');
+  void settingsPressed() => _gameBloc.gameButton.add(SettingsEvent());
   void playPressed() => _gameBloc.gameButton.add(PlayGameEvent());
 }
 

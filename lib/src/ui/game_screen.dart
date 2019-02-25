@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:word_game/src/ui/widgets/problem_widget.dart';
 import 'package:word_game/src/ui/widgets/endgame_widget.dart';
 import 'package:word_game/src/ui/widgets/home_widget.dart';
-import 'package:word_game/src/resources/style.dart';
+import 'package:word_game/src/ui/widgets/settings_widget.dart';
 
 import 'package:word_game/src/blocs/game_bloc.dart';
 import 'package:word_game/src/blocs/play_bloc.dart';
@@ -44,7 +44,7 @@ Widget _getGameScreen(GameStatus status) {
       screen = EndGameScreen();
       break;
     case GameStatus.settings:
-      screen = Container();
+      screen = SettingsWidget();
       break;
     default:
       screen = ErrorScreen();

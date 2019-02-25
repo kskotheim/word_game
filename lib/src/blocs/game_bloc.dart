@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'bloc_provider.dart';
+import 'package:word_game/src/blocs/bloc_provider.dart';
 
 class GameBloc implements BlocBase{
 
@@ -22,7 +22,6 @@ class GameBloc implements BlocBase{
 
   void _mapEventToState(event){
     if(event is PlayGameEvent){
-
       _gameStatusSink.add(GameStatus.playing);
     }
     if (event is GoHomeEvent){
@@ -31,6 +30,9 @@ class GameBloc implements BlocBase{
     if(event is GameOverEvent){
       _finalScore = event.score;
       _gameStatusSink.add(GameStatus.ending);
+    }
+    if(event is SettingsEvent){
+      _gameStatusSink.add(GameStatus.settings);
     }
   }
 

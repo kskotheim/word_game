@@ -39,9 +39,12 @@ class ProblemWidget extends StatelessWidget {
     playBloc.guessSink.add(ProblemAndGuess(problem: problem, guess: guess));
   }
 
-  Text _buildWordOption(String word) =>
-      Text(word, style: Style.BLACK_TITLE_TEXT_STYLE);
-
+  Widget _buildWordOption(String word) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(word, style: Style.BLACK_TITLE_TEXT_STYLE),
+      );
+  }
   Column _problemMetaInfo(ProblemData data) {
     return Column(
       children: <Widget>[
