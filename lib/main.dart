@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: Style.APP_TITLE,
       theme: Style.buildThemeData(),
-      home: HomePage(title: Style.APP_TITLE),
+      home: HomePage(),
     );
   }
 }

@@ -5,6 +5,11 @@ import 'package:word_game/src/blocs/play_bloc.dart';
 import 'package:word_game/src/resources/style.dart';
 
 class Home extends StatelessWidget {
+
+  static const String TITLE_STRING_1 = 'The Word';
+  static const String TITLE_STRING_2 = 'More Common';
+
+
   GameBloc _gameBloc;
   PlayBloc _playBloc;
 
@@ -17,6 +22,9 @@ class Home extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
+        Text(TITLE_STRING_1, style: Style.BLACK_TITLE_TEXT_STYLE,),
+        Text(TITLE_STRING_2, style: Style.BLACK_TITLE_TEXT_STYLE,),
+
         GameButton(whenPressed: playPressed, title: 'Play'),
         GameButton(whenPressed: settingsPressed, title: 'Difficulty: $difficulty'),
       ],
