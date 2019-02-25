@@ -9,7 +9,6 @@ import 'package:word_game/src/blocs/play_bloc.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
 
 class GameScreen extends StatelessWidget {
-
   static final GameBloc _gameBloc = GameBloc();
   static final PlayBloc _playBloc = PlayBloc(gameBloc: _gameBloc);
 
@@ -23,7 +22,13 @@ class GameScreen extends StatelessWidget {
           stream: _gameBloc.gameStatus,
           builder: (BuildContext context, AsyncSnapshot<GameStatus> status) {
             Widget _gameScreen = _getGameScreen(status.data);
-            return _gameScreen;
+            return WillPopScope(
+                onWillPop: () async {
+                  if(status.data == GameStatus.home) return true;
+                  _gameBloc.gameButton.add(GoHomeEvent());
+                  return false;
+                },
+                child: _gameScreen);
           },
         ),
       ),
@@ -52,7 +57,6 @@ Widget _getGameScreen(GameStatus status) {
   }
   return screen;
 }
-
 
 class ErrorScreen extends StatelessWidget {
   @override

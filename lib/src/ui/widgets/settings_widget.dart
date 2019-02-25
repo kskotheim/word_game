@@ -14,7 +14,7 @@ class SettingsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     playBloc = BlocProvider.of<PlayBloc>(context);
-    gameBloc =BlocProvider.of<GameBloc>(context);
+    gameBloc = BlocProvider.of<GameBloc>(context);
 
     return StreamBuilder<Object>(
       stream: null,
@@ -33,7 +33,7 @@ class SettingsWidget extends StatelessWidget {
 
   RaisedButton _difficultyButton(Difficulty difficulty, String difficultyString){
     return RaisedButton(
-      color: Colors.white,
+      color: Style.BUTTON_COLOR,
       child: Container(
         width: SETTINGS_BUTTON_WIDTH,
         height: SETTINGS_BUTTON_HEIGHT,

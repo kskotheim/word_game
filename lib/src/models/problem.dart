@@ -13,16 +13,16 @@ class Problem{
 
   Problem({this.problemData, this.numberOfProblemsInGame, this.wordRange}){
     assert(problemData != null || numberOfProblemsInGame != null);
-    //if no problem data is passed, mock some up
+    //if no problem data is passed, it is the initial problem
     if (problemData == null){
-      problemData = ProblemData(previousSolution: '', score: 0, currentOfTotal: [1,numberOfProblemsInGame]);
+      problemData = ProblemData(previousSolution: '', score: 0, currentOfTotal: [1,numberOfProblemsInGame], previousSolutionCorrect: true);
     }
 
     int _firstIndex = _getRandomIndex();
     int _secondIndex = _getRandomIndex();
 
     while(_firstIndex == _secondIndex) _secondIndex = _getRandomIndex();
-    
+
     if(wordRange != null){
       int dist = (_firstIndex - _secondIndex).abs();
       while (dist < wordRange[0] || dist > wordRange[1]){
@@ -45,10 +45,12 @@ class ProblemData{
   final String previousSolution;
   final int score;
   final List<int> currentOfTotal;
+  final bool previousSolutionCorrect;
 
-  ProblemData({this.previousSolution, this.score, this.currentOfTotal}){
+  ProblemData({this.previousSolution, this.score, this.currentOfTotal, this.previousSolutionCorrect}){
     assert(currentOfTotal != null);
     assert(score != null);
     assert(previousSolution != null);
+    assert(previousSolutionCorrect != null);
   }
 }

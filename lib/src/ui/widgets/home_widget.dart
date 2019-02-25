@@ -9,7 +9,6 @@ class Home extends StatelessWidget {
   static const String TITLE_STRING_1 = 'The Word';
   static const String TITLE_STRING_2 = 'More Common';
 
-
   GameBloc _gameBloc;
   PlayBloc _playBloc;
 
@@ -44,10 +43,13 @@ class GameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      padding: Style.BUTTON_PADDING,
+    return RaisedButton(
       onPressed: whenPressed,
-      child: Text(title, style: Style.BLACK_SUBTITLE_TEXT_STYLE),
+      color: Style.BUTTON_COLOR,
+      child: Container(
+        padding: Style.BUTTON_PADDING,
+        child: Text(title, style: Style.BLACK_SUBTITLE_TEXT_STYLE,),
+      ),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'src/home_page.dart';
-import 'src/resources/style.dart';
+import 'package:word_game/src/game_scaffold.dart';
+import 'package:word_game/src/resources/style.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: Style.APP_TITLE,
       theme: Style.buildThemeData(),
-      home: HomePage(),
+      home: GameScaffold(),
     );
   }
 }

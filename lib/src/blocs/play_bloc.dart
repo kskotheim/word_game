@@ -51,7 +51,8 @@ class PlayBloc implements BlocBase {
       ProblemData newProblemData = ProblemData(
           currentOfTotal: [problemCount[0] + 1, problemCount[1]],
           previousSolution: solution,
-          score: currentScore + scoreIncrease);
+          score: currentScore + scoreIncrease,
+          previousSolutionCorrect: correct);
 
       if (!finalSolution)
         _problemStreamSink.add(Problem(problemData: newProblemData, wordRange: _wordDifficultyRange));

@@ -48,11 +48,12 @@ class ProblemWidget extends StatelessWidget {
   Column _problemMetaInfo(ProblemData data) {
     return Column(
       children: <Widget>[
-        Text('Score: ${data.score}'),
-        Text('${data.currentOfTotal[0]} of ${data.currentOfTotal[1]}'),
+        Text('Score: ${data.score}', style: Style.BLACK_METADATA_TEXT_STYLE,),
+        Text('${data.currentOfTotal[0]} of ${data.currentOfTotal[1]}', style: Style.BLACK_METADATA_TEXT_STYLE,),
         data.previousSolution != ''
-            ? Text('previous solution: ${data.previousSolution}')
-            : Container()
+          ? Text('previous solution: ${data.previousSolution}', style: Style.BLACK_METADATA_TEXT_STYLE,)
+          : Container(),
+        Container(child: Divider(color: data.previousSolutionCorrect ? Style.CORRECT_COLOR : Style.INCORRECT_COLOR, height: 12.0,), width: 200.0,)
       ],
     );
   }
