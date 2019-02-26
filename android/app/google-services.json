@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "607472968955",
+    "firebase_url": "https://the-word-more-common.firebaseio.com",
+    "project_id": "the-word-more-common",
+    "storage_bucket": "the-word-more-common.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:607472968955:android:e4b5bb0bdc638815",
+        "android_client_info": {
+          "package_name": "com.braketrack.word_game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "607472968955-pemgo0rk6vvnfjscvesec0io6nlifs8d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdm1CE4a3z9QOvBqPJjqpixbufzb_jBpU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

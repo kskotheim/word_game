@@ -3,6 +3,7 @@ import 'package:word_game/src/blocs/play_bloc.dart';
 import 'package:word_game/src/blocs/game_bloc.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
 import 'package:word_game/src/resources/style.dart';
+import 'package:word_game/src/models/difficulty.dart';
 
 class SettingsWidget extends StatelessWidget {
   static const double SETTINGS_BUTTON_WIDTH = 100.0;

@@ -5,7 +5,7 @@ class GameBloc implements BlocBase{
 
   int _finalScore = 0;
   int get finalScore => _finalScore;
-
+  
   //Stream to handle the game's status (which page to render): output of Bloc
   StreamController<GameStatus> _gameStatusController = StreamController<GameStatus>();
   StreamSink<GameStatus> get _gameStatusSink => _gameStatusController.sink;
@@ -34,6 +34,12 @@ class GameBloc implements BlocBase{
     if(event is SettingsEvent){
       _gameStatusSink.add(GameStatus.settings);
     }
+    if(event is HighScoresEvent){
+      _gameStatusSink.add(GameStatus.highScores);
+    }
+    if(event is NameButtonEvent){
+      _gameStatusSink.add(GameStatus.naming);
+    }
   }
 
   void dispose(){
@@ -54,7 +60,11 @@ class GoHomeEvent extends GameEvent{}
 
 class GameOverEvent extends GameEvent{
   final int score;
-  GameOverEvent({this.score});
+  GameOverEvent({this.score}) : assert(score != 0);
 }
 
-enum GameStatus { home, settings, playing, ending }
+class HighScoresEvent extends GameEvent{}
+
+class NameButtonEvent extends GameEvent{}
+
+enum GameStatus { home, settings, playing, ending, highScores, naming }

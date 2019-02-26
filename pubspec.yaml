@@ -20,6 +20,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   english_words: ^3.1.5
+  cloud_firestore: ^0.9.5
+  rxdart: ^0.21.0
+  intl: ^0.15.7
+  shared_preferences: ^0.5.1
 
 dev_dependencies:
   flutter_test:

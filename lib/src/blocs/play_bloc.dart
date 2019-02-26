@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:word_game/src/models/problem.dart';
+import 'package:word_game/src/models/difficulty.dart';
 import 'package:word_game/src/blocs/game_bloc.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
 
@@ -88,17 +89,4 @@ class SetDifficulty extends PlayBlocInput {
   final Difficulty difficulty;
 
   SetDifficulty({this.difficulty}) : assert (difficulty != null);
-}
-
-class Difficulty{
-
-  static final Difficulty EASY = Difficulty(name: 'Easy', numProblemsInGame: 10, indexRange: [2000,5000]);
-  static final Difficulty MEDIUM = Difficulty(name: 'Medium', numProblemsInGame: 15, indexRange: [1000,2000]);
-  static final Difficulty HARD = Difficulty(name: 'Hard', numProblemsInGame: 20, indexRange: [1,1000]);
-
-  final String name;
-  final int numProblemsInGame;
-  final List<int> indexRange;
-
-  Difficulty({this.name, this.numProblemsInGame, this.indexRange});
 }

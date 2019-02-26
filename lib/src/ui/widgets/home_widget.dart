@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
 import 'package:word_game/src/blocs/game_bloc.dart';
 import 'package:word_game/src/blocs/play_bloc.dart';
+import 'package:word_game/src/blocs/highscore_bloc.dart';
 import 'package:word_game/src/resources/style.dart';
 
 class Home extends StatelessWidget {
@@ -11,11 +12,13 @@ class Home extends StatelessWidget {
 
   GameBloc _gameBloc;
   PlayBloc _playBloc;
+  HighScoreBloc _highScoreBloc;
 
   @override
   Widget build(BuildContext context) {
     _gameBloc = BlocProvider.of<GameBloc>(context);
     _playBloc = BlocProvider.of<PlayBloc>(context);
+    _highScoreBloc = BlocProvider.of<HighScoreBloc>(context);
     String difficulty = _playBloc.difficultyName;
 
     return Column(
@@ -25,12 +28,21 @@ class Home extends StatelessWidget {
         Text(TITLE_STRING_2, style: Style.BLACK_TITLE_TEXT_STYLE,),
         GameButton(whenPressed: playPressed, title: 'Play'),
         GameButton(whenPressed: settingsPressed, title: 'Difficulty: $difficulty'),
+        GameButton(whenPressed: highScoresPressed, title: 'High Scores'),
+        GameButton(whenPressed: nameButtonPressed, title:'Name: ${_highScoreBloc.currentUserName}',)
       ],
     );
   }
 
   void settingsPressed() => _gameBloc.gameButton.add(SettingsEvent());
   void playPressed() => _gameBloc.gameButton.add(PlayGameEvent());
+  void highScoresPressed() { 
+    _gameBloc.gameButton.add(HighScoresEvent());
+    _highScoreBloc.highScoreEvent.add(GetHighScores());
+  }
+  void nameButtonPressed(){
+    _gameBloc.gameButton.add(NameButtonEvent());
+  }
 }
 
 class GameButton extends StatelessWidget {
