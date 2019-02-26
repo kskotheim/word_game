@@ -29,15 +29,15 @@ class GameScreen extends StatelessWidget {
             builder: (BuildContext context, AsyncSnapshot<GameStatus> status) {
               Widget _gameScreen = _getGameScreen(status.data);
               return WillPopScope(
-                  onWillPop: () async {
-                    if (status.data == GameStatus.home)
-                      return true;
-                    else {
-                      _gameBloc.gameButton.add(GoHomeEvent());
-                      return false;
-                    }
-                  },
-                  child: _gameScreen);
+                onWillPop: () async {
+                  if (status.data == GameStatus.home)
+                    return true;
+                  else {
+                    _gameBloc.gameButton.add(GoHomeEvent());
+                    return false;
+                  }
+                },
+                child: _gameScreen);
             },
           ),
         ),

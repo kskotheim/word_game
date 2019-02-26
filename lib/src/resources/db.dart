@@ -14,7 +14,7 @@ class DatabaseManager {
   }
 
   Future<List<HighScore>> getHighScores() async {
-    List<DocumentSnapshot> snapshots = await highScoresCollection.limit(10).getDocuments().then((docs) => docs.documents);
+    List<DocumentSnapshot> snapshots = await highScoresCollection.orderBy('time', descending: true).limit(10).getDocuments().then((docs) => docs.documents);
     return snapshots.map((snapshot) => HighScore.fromJson(snapshot.data)).toList();
   }
 

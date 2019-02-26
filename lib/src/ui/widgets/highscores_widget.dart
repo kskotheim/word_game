@@ -22,41 +22,65 @@ class HighScoresWidget extends StatelessWidget {
         stream: _highScoreBloc.highScores,
         builder: (context, snapshot) {
           if (snapshot.data == null) return Center(child: Text('loading'));
-
+          double height = MediaQuery.of(context).size.height;
           List<HighScore> theScores = snapshot.data;
           return Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 40.0, 0, 40.0),
-                child: Text('High Scores', style: Style.BLACK_TITLE_TEXT_STYLE,),
-              ),
+              _highscoresTitle(),
               Container(
                 padding: Style.LISTVIEW_PADDING,
-                height:300.0,
-                child: ListView(
-                  children: theScores
-                      .map((scoreObj) => ListTile(dense: true, title: Text('${scoreObj.name} - ${scoreObj.score}'), subtitle: Text(_fromDateTime(scoreObj.time)), leading: _letterIcon(scoreObj.difficulty),))
-                      .toList(),
+                height: height - 180.0,
+                child: Scrollbar(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: theScores
+                        .map((scoreObj) => ListTile(
+                              dense: true,
+                              title:
+                                  Text('${scoreObj.name} - ${scoreObj.score}'),
+                              subtitle: Text(_fromDateTime(scoreObj.time)),
+                              leading: _letterIcon(scoreObj.difficulty),
+                            ))
+                        .toList(),
+                  ),
                 ),
               ),
-              RaisedButton(
-                color: Style.BUTTON_COLOR,
-                padding: Style.BUTTON_PADDING,
-                child: Text('Home', style: Style.BLACK_SUBTITLE_TEXT_STYLE,),
-                onPressed: () => _gameBloc.gameButton.add(GoHomeEvent()),
-              )
+              _goHomeButton()
             ],
           );
         });
   }
 
-  Widget _letterIcon(String difficulty){
-    if(difficulty == Difficulty.EASY_STRING) return Text('E', style: Style.BLACK_TITLE_TEXT_STYLE,);
-    if(difficulty == Difficulty.MEDIUM_STRING) return Text('M', style: Style.BLACK_TITLE_TEXT_STYLE,);
-    if(difficulty == Difficulty.HARD_STRING) return Text('H', style: Style.BLACK_TITLE_TEXT_STYLE,);
+  Padding _highscoresTitle() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 60.0, 0, 0.0),
+      child: Text(
+        'High Scores',
+        style: Style.BLACK_TITLE_TEXT_STYLE,
+      ),
+    );
   }
 
-  String _fromDateTime(DateTime time){
+  RaisedButton _goHomeButton() {
+    return RaisedButton(
+      color: Style.BUTTON_COLOR,
+      padding: Style.BUTTON_PADDING,
+      child: Text('Home', style: Style.BLACK_SUBTITLE_TEXT_STYLE),
+      onPressed: () => _gameBloc.gameButton.add(GoHomeEvent()),
+    );
+  }
+
+  Widget _letterIcon(String difficulty) {
+    if (difficulty == Difficulty.EASY_STRING)
+      return Text('E', style: Style.BLACK_TITLE_TEXT_STYLE);
+    if (difficulty == Difficulty.MEDIUM_STRING)
+      return Text('M', style: Style.BLACK_TITLE_TEXT_STYLE);
+    if (difficulty == Difficulty.HARD_STRING)
+      return Text('H', style: Style.BLACK_TITLE_TEXT_STYLE);
+    return Container();
+  }
+
+  String _fromDateTime(DateTime time) {
     return DateFormat("EEE, MMM d, ''yy").format(time);
   }
 }
