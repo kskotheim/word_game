@@ -9,6 +9,7 @@ import 'package:word_game/src/ui/widgets/naming_widget.dart';
 import 'package:word_game/src/blocs/game_bloc.dart';
 import 'package:word_game/src/blocs/play_bloc.dart';
 import 'package:word_game/src/blocs/highscore_bloc.dart';
+import 'package:word_game/src/blocs/naming_bloc.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
 
 class GameScreen extends StatelessWidget {
@@ -26,24 +27,26 @@ class GameScreen extends StatelessWidget {
           bloc: _highScoreBloc,
           child: StreamBuilder(
             stream: _gameBloc.gameStatus,
-            builder: (BuildContext context, AsyncSnapshot<GameStatus> status) {
+            builder:
+                (BuildContext context, AsyncSnapshot<GameStatus> status) {
               Widget _gameScreen = _getGameScreen(status.data);
               return WillPopScope(
-                onWillPop: () async {
-                  if (status.data == GameStatus.home)
-                    return true;
-                  else {
-                    _gameBloc.gameButton.add(GoHomeEvent());
-                    return false;
-                  }
-                },
-                child: _gameScreen);
+                  onWillPop: () async {
+                    if (status.data == GameStatus.home)
+                      return true;
+                    else {
+                      _gameBloc.gameButton.add(GoHomeEvent());
+                      return false;
+                    }
+                  },
+                  child: _gameScreen);
             },
           ),
         ),
       ),
     );
   }
+
   Widget _getGameScreen(GameStatus status) {
     switch (status) {
       case GameStatus.home:
@@ -57,11 +60,9 @@ class GameScreen extends StatelessWidget {
       case GameStatus.highScores:
         return HighScoresWidget();
       case GameStatus.naming:
-        return NamingPage(currentName: _highScoreBloc.currentUserName,);
+        return NamingPage();
       default:
         return Text('Error!');
     }
   }
 }
-
-

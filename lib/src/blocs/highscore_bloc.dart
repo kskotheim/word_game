@@ -30,7 +30,7 @@ class HighScoreBloc implements BlocBase {
 
   void _getUsername() async {
     _prefs = await SharedPreferences.getInstance();
-    _currentUsername = _prefs.getString(_SHARED_PREFS_USERNAME_KEY);
+    _currentUsername = _prefs.getString(_SHARED_PREFS_USERNAME_KEY) ?? '';
   }
 
   void _mapEventToState(HighScoreEvent event) {
