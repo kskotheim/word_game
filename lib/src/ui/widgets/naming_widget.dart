@@ -18,7 +18,7 @@ class NamingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     _gameBloc = BlocProvider.of<GameBloc>(context);
     _highScoreBloc = BlocProvider.of<HighScoreBloc>(context);
-    _namingBloc = NamingBloc(_highScoreBloc.currentUserName);
+    _namingBloc = NamingBloc();
 
     return BlocProvider(
       bloc: _namingBloc,
@@ -63,7 +63,7 @@ class NameField extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.namingString,
       builder: (context, snapshot) {
-        return TextField(
+        return TextField( 
           onChanged: bloc.changeName,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(

@@ -13,9 +13,13 @@ class DatabaseManager {
     return highScoresCollection.document().setData(highScore.toJson);
   }
 
-  Future<List<HighScore>> getHighScores() async {
+  Future<List<HighScore>> getRecentHighScores() async {
     List<DocumentSnapshot> snapshots = await highScoresCollection.orderBy('time', descending: true).limit(10).getDocuments().then((docs) => docs.documents);
     return snapshots.map((snapshot) => HighScore.fromJson(snapshot.data)).toList();
   }
 
+  Future<List<HighScore>> getAllTimeHighScores() async {
+    List<DocumentSnapshot> snapshots = await highScoresCollection.orderBy('score', descending: true).limit(10).getDocuments().then((docs) => docs.documents);
+    return snapshots.map((snapshot) => HighScore.fromJson(snapshot.data)).toList();
+  }
 }

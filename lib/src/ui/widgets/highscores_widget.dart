@@ -13,6 +13,9 @@ class HighScoresWidget extends StatelessWidget {
   HighScoreBloc _highScoreBloc;
   GameBloc _gameBloc;
 
+  var _curvedBorderBoxDecoration = BoxDecoration(border: Border.all(color: Colors.black45), borderRadius: BorderRadius.all(Radius.circular(20.0)));
+
+
   @override
   Widget build(BuildContext context) {
     _highScoreBloc = BlocProvider.of<HighScoreBloc>(context);
@@ -27,33 +30,67 @@ class HighScoresWidget extends StatelessWidget {
           return Column(
             children: <Widget>[
               _highscoresTitle(),
-              Container(
-                padding: Style.LISTVIEW_PADDING,
-                height: height - 180.0,
-                child: Scrollbar(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: theScores
-                        .map((scoreObj) => ListTile(
-                              dense: true,
-                              title:
-                                  Text('${scoreObj.name} - ${scoreObj.score}'),
-                              subtitle: Text(_fromDateTime(scoreObj.time)),
-                              leading: _letterIcon(scoreObj.difficulty),
-                            ))
-                        .toList(),
-                  ),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _recentHighScoresBtn(),
+                  _allTimeHighScoresBtn(),
+                ],
               ),
+              _highscoresListview(height, theScores),
               _goHomeButton()
             ],
           );
         });
   }
 
+  Widget _recentHighScoresBtn() {
+    return Container(
+      decoration: _highScoreBloc.recent ? _curvedBorderBoxDecoration : null,
+      child: FlatButton(
+        child: Text('Recent'),
+        onPressed: () {
+          _highScoreBloc.highScoreEvent.add(GetRecentHighScores());
+        },
+      ),
+    );
+  }
+
+  Widget _allTimeHighScoresBtn() {
+        return Container(
+          decoration: _highScoreBloc.recent ? null : _curvedBorderBoxDecoration,
+      child: FlatButton(
+        child: Text('All Time'),
+        onPressed: () {
+          _highScoreBloc.highScoreEvent.add(GetAllHighScores());
+        },
+      ),
+    );
+  }
+
+  Container _highscoresListview(double height, List<HighScore> theScores) {
+    return Container(
+      padding: Style.LISTVIEW_PADDING,
+      height: height - 240.0,
+      child: Scrollbar(
+        child: ListView(
+          shrinkWrap: true,
+          children: theScores
+              .map((scoreObj) => ListTile(
+                    dense: true,
+                    title: Text('${scoreObj.name} - ${scoreObj.score}'),
+                    subtitle: Text(_fromDateTime(scoreObj.time)),
+                    leading: _letterIcon(scoreObj.difficulty),
+                  ))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
   Padding _highscoresTitle() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 60.0, 0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0, 40.0, 0, 30.0),
       child: Text(
         'High Scores',
         style: Style.BLACK_TITLE_TEXT_STYLE,
@@ -77,6 +114,8 @@ class HighScoresWidget extends StatelessWidget {
       return Text('M', style: Style.BLACK_TITLE_TEXT_STYLE);
     if (difficulty == Difficulty.HARD_STRING)
       return Text('H', style: Style.BLACK_TITLE_TEXT_STYLE);
+    if (difficulty == Difficulty.SUDDEN_DEATH_STRING)
+      return Text('3L', style: Style.BLACK_TITLE_TEXT_STYLE);
     return Container();
   }
 

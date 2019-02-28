@@ -9,6 +9,9 @@ class HighScoreBloc implements BlocBase {
 
   static const String _SHARED_PREFS_USERNAME_KEY = 'username';
 
+  bool _recent = true;
+  bool get recent => _recent;
+
   String _currentUsername = '';
   String get currentUserName => _currentUsername;
   SharedPreferences _prefs;
@@ -24,7 +27,8 @@ class HighScoreBloc implements BlocBase {
 
   HighScoreBloc() {
     _highScoreEventStream.stream.listen((event) => _mapEventToState(event));
-    highScoreEvent.add(GetHighScores());
+    highScoreEvent.add(GetAllHighScores());
+    
     _getUsername();
   }
 
@@ -34,21 +38,27 @@ class HighScoreBloc implements BlocBase {
   }
 
   void _mapEventToState(HighScoreEvent event) {
-    if (event is GetHighScores) {
-      DatabaseManager.db
-          .getHighScores()
-          .then((highScores) => _highScoreSink.add(highScores));
+    if (event is GetAllHighScores) {
+      _recent = false;
+      getAllTimeHighScores().then((highScores) => _highScoreSink.add(highScores));
+    }
+    if (event is GetRecentHighScores) {
+      _recent = true;
+      getRecentHighScores().then((highScores) => _highScoreSink.add(highScores));
     }
     if (event is SetHighScore) {
       DatabaseManager.db.saveHighScore(
         HighScore(name: currentUserName, score: event.highScore, time: DateTime.now(), difficulty: event.difficulty)
-      ).then((_) => highScoreEvent.add(GetHighScores()));
+      ).then((_) => highScoreEvent.add(GetAllHighScores()));
     }
     if(event is RenameUserEvent){
       _currentUsername = event.newUsername;
       _prefs.setString(_SHARED_PREFS_USERNAME_KEY, event.newUsername);
     }
   }
+
+  Function get getAllTimeHighScores => DatabaseManager.db.getAllTimeHighScores;
+  Function get getRecentHighScores => DatabaseManager.db.getRecentHighScores;
 
   @override
   void dispose() {
@@ -61,7 +71,9 @@ class HighScoreBloc implements BlocBase {
 
 abstract class HighScoreEvent {}
 
-class GetHighScores extends HighScoreEvent {}
+class GetAllHighScores extends HighScoreEvent {}
+
+class GetRecentHighScores extends HighScoreEvent {}
 
 class SetHighScore extends HighScoreEvent {
   final int highScore;

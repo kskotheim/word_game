@@ -12,6 +12,9 @@ class PlayBloc implements BlocBase {
   //difficulty settings
   Difficulty _difficulty = Difficulty.EASY;
 
+  //sudden death settings
+  int _lives = 3;
+
   //Stream to display the current problem and problem data: Output of Bloc
   StreamController<Problem> _problemStreamController = StreamController<Problem>();
   StreamSink get _problemStreamSink => _problemStreamController.sink;
@@ -51,15 +54,21 @@ class PlayBloc implements BlocBase {
     int scoreIncrease = correct ? POINTS_INCREASE_PER_CORRECT_ANSWER : 0;
     
     ProblemData newProblemData = ProblemData(
-        currentOfTotal: [problemCount[0] + 1, problemCount[1]],
+        currentOfTotal: [problemCount[0] + ((_difficulty.suddenDeath ?? false) ? 0 : 1), problemCount[1]],
         previousSolution: solution,
         score: currentScore + scoreIncrease,
         previousSolutionCorrect: correct);
     
-    if (!finalSolution)
+    if(_difficulty.suddenDeath && !correct) {
+      _lives--;
+    } 
+
+    if (!finalSolution && (!_difficulty.suddenDeath || _lives >0)){
       _problemStreamSink.add(Problem(problemData: newProblemData, wordRange: _difficulty.indexRange));
-    else
+    } else {
+      _lives = 3;
       gameBloc.gameButton.add(GameOverEvent(score: currentScore + scoreIncrease));
+    }
   }
 
   String get difficultyName => _difficulty.name;

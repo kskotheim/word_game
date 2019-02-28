@@ -49,7 +49,9 @@ class ProblemWidget extends StatelessWidget {
     return Column(
       children: <Widget>[
         Text('Score: ${data.score}', style: Style.BLACK_METADATA_TEXT_STYLE,),
-        Text('${data.currentOfTotal[0]} of ${data.currentOfTotal[1]}', style: Style.BLACK_METADATA_TEXT_STYLE,),
+        data.currentOfTotal[1] != 2   //magic number that means this game is sudden death
+          ? Text('${data.currentOfTotal[0]} of ${data.currentOfTotal[1]}', style: Style.BLACK_METADATA_TEXT_STYLE,)
+          : Container(),
         data.previousSolution != ''
           ? Text('previous solution: ${data.previousSolution}', style: Style.BLACK_METADATA_TEXT_STYLE,)
           : Container(),

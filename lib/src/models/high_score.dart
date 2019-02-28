@@ -21,6 +21,6 @@ class HighScore{
   Map<String, dynamic> get toJson => {_NAME_STRING:name, _SCORE_STRING:score, _TIME_STRING:time, _DIFFICULTY_STRING:difficulty};
 
   static HighScore fromJson(Map<String, dynamic> highscore){
-    return HighScore(name: highscore[_NAME_STRING], score: highscore[_SCORE_STRING], time: highscore[_TIME_STRING], difficulty: highscore[_DIFFICULTY_STRING]);
+    return HighScore(name: highscore[_NAME_STRING] ?? '', score: highscore[_SCORE_STRING], time: highscore[_TIME_STRING], difficulty: highscore[_DIFFICULTY_STRING]);
   }
 }

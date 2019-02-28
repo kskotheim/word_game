@@ -1,6 +1,5 @@
 import 'package:word_game/src/blocs/bloc_provider.dart';
 import 'dart:async';
-import 'package:rxdart/rxdart.dart';
 
 class NamingBloc implements BlocBase {
 
@@ -10,20 +9,14 @@ class NamingBloc implements BlocBase {
   static bool _currentUsernameOk = true;
   bool get currentUsernameOk => _currentUsernameOk;
 
-  BehaviorSubject<String> _namingStringController;
+  StreamController<String> _namingStringController =StreamController<String>();
   Stream<String> get namingString => _namingStringController.stream.transform(nameValidator);
   Function(String) get changeName => _namingStringController.sink.add;
-
-  NamingBloc(String currentUserName){
-    _namingStringController = BehaviorSubject<String>.seeded(currentUserName);
-    print('new naming bloc, currentusername: ' + currentUserName);
-    if(currentUserName != null) changeName(currentUserName);
-  }
 
 
   final nameValidator = StreamTransformer<String, String>.fromHandlers(
     handleData: (name, sink){
-      if( !(name.split(' ').map((name) => _BAD_WORDS.contains(name)).toList().contains(true)) ) {
+      if( !(name.split(' ').map((name) => _BAD_WORDS.contains(name.toLowerCase())).toList().contains(true)) ) {
         _currentUserName = name;
         sink.add(name);
       }

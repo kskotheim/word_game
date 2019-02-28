@@ -6,7 +6,7 @@ import 'package:word_game/src/resources/style.dart';
 import 'package:word_game/src/models/difficulty.dart';
 
 class SettingsWidget extends StatelessWidget {
-  static const double SETTINGS_BUTTON_WIDTH = 100.0;
+  static const double SETTINGS_BUTTON_WIDTH = 140.0;
   static const double SETTINGS_BUTTON_HEIGHT = 80.0;
 
   PlayBloc playBloc;
@@ -26,6 +26,7 @@ class SettingsWidget extends StatelessWidget {
             _difficultyButton(Difficulty.EASY),
             _difficultyButton(Difficulty.MEDIUM),
             _difficultyButton(Difficulty.HARD),
+            _difficultyButton(Difficulty.SUDDEN_DEATH),
           ],
         );
       }
