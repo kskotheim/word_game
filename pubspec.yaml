@@ -24,6 +24,7 @@ dependencies:
   rxdart: ^0.21.0
   intl: ^0.15.7
   shared_preferences: ^0.5.1
+  flutter_webview_plugin: ^0.3.0
 
 dev_dependencies:
   flutter_test:

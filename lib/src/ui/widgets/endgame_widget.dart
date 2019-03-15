@@ -15,7 +15,8 @@ class EndGameScreen extends StatelessWidget{
     HighScoreBloc highScoreBloc = BlocProvider.of<HighScoreBloc>(context);
     PlayBloc playBloc = BlocProvider.of<PlayBloc>(context);
 
-    highScoreBloc.highScoreEvent.add(SetHighScore(highScore: gameBloc.finalScore, difficulty: playBloc.difficultyName));
+    if(highScoreBloc.shareHighScores) 
+      highScoreBloc.highScoreEvent.add(SetHighScore(highScore: gameBloc.finalScore, difficulty: playBloc.difficultyName));
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

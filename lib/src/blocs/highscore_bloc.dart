@@ -12,6 +12,10 @@ class HighScoreBloc implements BlocBase {
   bool _recent = true;
   bool get recent => _recent;
 
+  bool _shareHighScores = true;
+  bool get shareHighScores => _shareHighScores;
+  void switchSharedHighScores() => _shareHighScores = !_shareHighScores;
+
   String _currentUsername = '';
   String get currentUserName => _currentUsername;
   SharedPreferences _prefs;

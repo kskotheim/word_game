@@ -6,9 +6,17 @@ import 'package:word_game/src/blocs/highscore_bloc.dart';
 import 'package:word_game/src/blocs/naming_bloc.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
 
-class NamingPage extends StatelessWidget {
+class NamingPage extends StatefulWidget {
+  @override
+  _NamingPageState createState() => _NamingPageState();
+}
+
+class _NamingPageState extends State<NamingPage> {
   static const double _NAME_FIELD_WIDTH = 200.0;
   static const String _GO_HOME_STRING = 'Ok';
+  final BoxDecoration _curvedBorderBoxDecoration = BoxDecoration(
+      border: Border.all(color: Colors.black45),
+      borderRadius: BorderRadius.all(Radius.circular(20.0)));
 
   GameBloc _gameBloc;
   HighScoreBloc _highScoreBloc;
@@ -25,15 +33,72 @@ class NamingPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Container(
-            child: NameField(
-              bloc: _namingBloc,
-            ),
-            width: _NAME_FIELD_WIDTH,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                child: NameField(
+                  bloc: _namingBloc,
+                ),
+                width: _NAME_FIELD_WIDTH,
+              ),
+              Container(
+                height: 40.0,
+              ),
+              _renameUserButton(),
+            ],
           ),
-          _renameUserButton()
+          _shareHighScoresOption(),
         ],
       ),
+    );
+  }
+
+  Column _shareHighScoresOption() {
+    return Column(
+      children: <Widget>[
+        InkWell(
+          onTap: () {
+            setState(() {
+              _highScoreBloc.switchSharedHighScores();
+            });
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Checkbox(
+                value: _highScoreBloc.shareHighScores,
+                onChanged: (val) {
+                  setState(() {
+                    _highScoreBloc.switchSharedHighScores();
+                  });
+                },
+              ),
+              Text('Share High Scores'),
+            ],
+          ),
+        ),
+        _highScoreBloc.shareHighScores ? Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                  'Your username will be visible to others.\n\nPlease do not use any personally identifying information.'),
+            ),
+            Container(height: 20.0,),
+             Container(
+              child: FlatButton(
+                child: Text('Privacy Policy'),
+                onPressed: () {
+                  //navigate to https://flutterdeveloper.wordpress.com/word-game-privacy-policy/
+                  Navigator.pushNamed(context, '/privacy');
+                },
+              ),
+              decoration: _curvedBorderBoxDecoration,
+            ) 
+          ],
+        ): Container(),
+      ],
     );
   }
 
@@ -43,8 +108,8 @@ class NamingPage extends StatelessWidget {
       color: Style.BUTTON_COLOR,
       child: Text(_GO_HOME_STRING, style: Style.BLACK_SUBTITLE_TEXT_STYLE),
       onPressed: () {
-        
-        _highScoreBloc.highScoreEvent.add(RenameUserEvent(newUsername: _namingBloc.currentUserName));
+        _highScoreBloc.highScoreEvent
+            .add(RenameUserEvent(newUsername: _namingBloc.currentUserName));
         _gameBloc.gameButton.add(GoHomeEvent());
       },
     );
@@ -63,11 +128,12 @@ class NameField extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.namingString,
       builder: (context, snapshot) {
-        return TextField( 
+        return TextField(
           onChanged: bloc.changeName,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
-              labelText: _USERNAME_INPUT_LABEL_STRING, errorText: snapshot.error),
+              labelText: _USERNAME_INPUT_LABEL_STRING,
+              errorText: snapshot.error),
         );
       },
     );
