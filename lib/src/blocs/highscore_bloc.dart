@@ -51,9 +51,11 @@ class HighScoreBloc implements BlocBase {
       getRecentHighScores().then((highScores) => _highScoreSink.add(highScores));
     }
     if (event is SetHighScore) {
-      DatabaseManager.db.saveHighScore(
-        HighScore(name: currentUserName, score: event.highScore, time: DateTime.now(), difficulty: event.difficulty)
-      ).then((_) => highScoreEvent.add(GetAllHighScores()));
+      if(_shareHighScores && currentUserName.length > 0){
+        DatabaseManager.db.saveHighScore(
+          HighScore(name: currentUserName, score: event.highScore, time: DateTime.now(), difficulty: event.difficulty)
+        ).then((_) => highScoreEvent.add(GetAllHighScores()));
+      }
     }
     if(event is RenameUserEvent){
       _currentUsername = event.newUsername;

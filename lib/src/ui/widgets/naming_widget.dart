@@ -30,31 +30,38 @@ class _NamingPageState extends State<NamingPage> {
 
     return BlocProvider(
       bloc: _namingBloc,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: ListView(
+
         children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                child: NameField(
-                  bloc: _namingBloc,
-                ),
-                width: _NAME_FIELD_WIDTH,
-              ),
-              Container(
-                height: 40.0,
-              ),
-              _renameUserButton(),
-            ],
-          ),
-          _shareHighScoresOption(),
+          Container(height: 140.0,),
+          _renameUserSection(),
+          Container(height: 100.0,),
+          _shareHighScoresSection(),
+          Container(height:40.0),
         ],
       ),
     );
   }
 
-  Column _shareHighScoresOption() {
+  Column _renameUserSection() {
+    return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              child: NameField(
+                bloc: _namingBloc,
+              ),
+              width: _NAME_FIELD_WIDTH,
+            ),
+            Container(
+              height: 40.0,
+            ),
+            _renameUserButton(),
+          ],
+        );
+  }
+
+  Column _shareHighScoresSection() {
     return Column(
       children: <Widget>[
         InkWell(
@@ -129,6 +136,7 @@ class NameField extends StatelessWidget {
       stream: bloc.namingString,
       builder: (context, snapshot) {
         return TextField(
+          maxLength: 20,
           onChanged: bloc.changeName,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
