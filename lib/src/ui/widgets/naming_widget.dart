@@ -13,10 +13,6 @@ class NamingPage extends StatefulWidget {
 
 class _NamingPageState extends State<NamingPage> {
   static const double _NAME_FIELD_WIDTH = 200.0;
-  static const String _GO_HOME_STRING = 'Ok';
-  final BoxDecoration _curvedBorderBoxDecoration = BoxDecoration(
-      border: Border.all(color: Colors.black45),
-      borderRadius: BorderRadius.all(Radius.circular(20.0)));
 
   GameBloc _gameBloc;
   HighScoreBloc _highScoreBloc;
@@ -33,9 +29,9 @@ class _NamingPageState extends State<NamingPage> {
       child: ListView(
 
         children: <Widget>[
-          Container(height: 140.0,),
-          _renameUserSection(),
           Container(height: 100.0,),
+          _renameUserSection(),
+          Container(height: 60.0,),
           _shareHighScoresSection(),
           Container(height:40.0),
         ],
@@ -54,7 +50,7 @@ class _NamingPageState extends State<NamingPage> {
               width: _NAME_FIELD_WIDTH,
             ),
             Container(
-              height: 40.0,
+              height: 20.0,
             ),
             _renameUserButton(),
           ],
@@ -81,28 +77,36 @@ class _NamingPageState extends State<NamingPage> {
                   });
                 },
               ),
-              Text('Share High Scores'),
+              Text('Share High Scores',
+              style: Style.BLACK_METADATA_TEXT_STYLE_ABZ),
             ],
           ),
         ),
         _highScoreBloc.shareHighScores ? Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(20.0),
               child: Text(
-                  'Your username will be visible to others.\n\nPlease do not use any personally identifying information.'),
+                  'Your username will be visible to others.\n\nPlease do not use any personally identifying information.',
+                  style: Style.BLACK_METADATA_TEXT_STYLE_ABZ,),
             ),
-            Container(height: 20.0,),
-             Container(
-              child: FlatButton(
-                child: Text('Privacy Policy'),
-                onPressed: () {
-                  //navigate to https://flutterdeveloper.wordpress.com/word-game-privacy-policy/
-                  Navigator.pushNamed(context, '/privacy');
-                },
-              ),
-              decoration: _curvedBorderBoxDecoration,
-            ) 
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                  'PRIVACY POLICY: The Word More Common does not collect or store any personally identifying information. The only information we collect in our database is a list of the scores, including the username of the user for each score. We collect this information for the sole purpose of displaying recent and all-time high scores in the app. Scores kept in this database may be deleted at any time for any reason. For more information contact Kris at kris@braketrack.com.',
+                  style: Style.PRIVACY_POLICY_TEXT_STYLE),
+            ),
+            // Container(height: 20.0,),
+            //  Container(
+            //   child: FlatButton(
+            //     child: Text('Privacy Policy'),
+            //     onPressed: () {
+            //       //navigate to https://flutterdeveloper.wordpress.com/word-game-privacy-policy/
+            //       Navigator.pushNamed(context, '/privacy');
+            //     },
+            //   ),
+            //   decoration: _curvedBorderBoxDecoration,
+            // ) 
           ],
         ): Container(),
       ],
@@ -110,16 +114,13 @@ class _NamingPageState extends State<NamingPage> {
   }
 
   RaisedButton _renameUserButton() {
-    return RaisedButton(
-      padding: Style.BUTTON_PADDING,
-      color: Style.BUTTON_COLOR,
-      child: Text(_GO_HOME_STRING, style: Style.BLACK_SUBTITLE_TEXT_STYLE),
-      onPressed: () {
-        _highScoreBloc.highScoreEvent
-            .add(RenameUserEvent(newUsername: _namingBloc.currentUserName));
-        _gameBloc.gameButton.add(GoHomeEvent());
-      },
-    );
+    return Style.button(renameUser, 'OK');
+  }
+
+  void renameUser(){
+    _highScoreBloc.highScoreEvent
+        .add(RenameUserEvent(newUsername: _namingBloc.currentUserName));
+    _gameBloc.gameButton.add(GoHomeEvent());
   }
 }
 

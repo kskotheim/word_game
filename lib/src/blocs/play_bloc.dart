@@ -3,11 +3,15 @@ import 'package:word_game/src/models/problem.dart';
 import 'package:word_game/src/models/difficulty.dart';
 import 'package:word_game/src/blocs/game_bloc.dart';
 import 'package:word_game/src/blocs/bloc_provider.dart';
+import 'package:audioplayers/audio_cache.dart';
+
 
 class PlayBloc implements BlocBase {
   static const int POINTS_INCREASE_PER_CORRECT_ANSWER = 100;
+  static AudioCache player = AudioCache();
 
   final GameBloc gameBloc;
+  final bool hasSound;
 
   //difficulty settings
   Difficulty _difficulty = Difficulty.EASY;
@@ -24,14 +28,14 @@ class PlayBloc implements BlocBase {
   StreamController<PlayBlocInput> _guessController = StreamController<PlayBlocInput>();
   StreamSink get guessSink => _guessController.sink;
 
-  PlayBloc({this.gameBloc}) {
+  PlayBloc({this.gameBloc, this.hasSound}) {
     problemBroadcast = _problemStreamController.stream.asBroadcastStream();
     _guessController.stream.listen(_mapEventToState);
   }
 
   void _mapEventToState(PlayBlocInput playBlocInput) {
     if (playBlocInput is InitialProblem) {
-      return _problemStreamSink.add(Problem(numberOfProblemsInGame: _difficulty.numProblemsInGame, wordRange: _difficulty.indexRange));
+      return _problemStreamSink.add(Problem(numberOfProblemsInGame: _difficulty.numProblemsInGame, wordRange: _difficulty.ratioRange));
     }
 
     if (playBlocInput is ProblemAndGuess) {
@@ -51,23 +55,30 @@ class PlayBloc implements BlocBase {
     bool correct = guess == solution;
     bool finalSolution = problemCount[0] == problemCount[1];
     int currentScore = playBlocInput.problem.problemData.score;
-    int scoreIncrease = correct ? POINTS_INCREASE_PER_CORRECT_ANSWER : 0;
+    //tie score increase to difficulty
+    int scoreIncrease = correct ? POINTS_INCREASE_PER_CORRECT_ANSWER + playBlocInput.difficulty.round(): 0;
     
     ProblemData newProblemData = ProblemData(
         currentOfTotal: [problemCount[0] + ((_difficulty.suddenDeath ?? false) ? 0 : 1), problemCount[1]],
         previousSolution: solution,
         score: currentScore + scoreIncrease,
         previousSolutionCorrect: correct);
+
+    Problem newProblem = Problem(problemData: newProblemData, wordRange: _difficulty.ratioRange);
     
+    if(gameBloc.soundOn){
+      if(correct) player.play('positive.wav');
+      else player.play('negative.wav');
+    }
     if(_difficulty.suddenDeath && !correct) {
       _lives--;
     } 
-
     if (!finalSolution && (!_difficulty.suddenDeath || _lives >0)){
-      _problemStreamSink.add(Problem(problemData: newProblemData, wordRange: _difficulty.indexRange));
+      _problemStreamSink.add(newProblem);
     } else {
       _lives = 3;
       gameBloc.gameButton.add(GameOverEvent(score: currentScore + scoreIncrease));
+      if(gameBloc.soundOn) player.play('applause.mp3');
     }
   }
 
@@ -87,9 +98,13 @@ abstract class PlayBlocInput {}
 class ProblemAndGuess extends PlayBlocInput {
   final Problem problem;
   final String guess;
+  final double difficulty;
 
-  ProblemAndGuess({this.problem, this.guess})
-      : assert(problem != null, guess != null);
+  ProblemAndGuess({this.problem, this.guess, this.difficulty}){
+      assert(problem != null);
+      assert(guess != null);
+      assert(difficulty != null);
+  }
 }
 
 class InitialProblem extends PlayBlocInput {}

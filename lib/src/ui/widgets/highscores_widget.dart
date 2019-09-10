@@ -35,10 +35,11 @@ class HighScoresWidget extends StatelessWidget {
                 children: <Widget>[
                   _recentHighScoresBtn(),
                   _allTimeHighScoresBtn(),
+                  _localHighScoresBtn(),
                 ],
               ),
               _highscoresListview(height, theScores),
-              _goHomeButton()
+              Style.button(() => _gameBloc.gameButton.add(GoHomeEvent()), 'Home')
             ],
           );
         });
@@ -46,7 +47,7 @@ class HighScoresWidget extends StatelessWidget {
 
   Widget _recentHighScoresBtn() {
     return Container(
-      decoration: _highScoreBloc.recent ? _curvedBorderBoxDecoration : null,
+      decoration: _highScoreBloc.highScoreType == HighScoreType.recent ? _curvedBorderBoxDecoration : null,
       child: FlatButton(
         child: Text('Recent'),
         onPressed: () {
@@ -58,7 +59,7 @@ class HighScoresWidget extends StatelessWidget {
 
   Widget _allTimeHighScoresBtn() {
         return Container(
-          decoration: _highScoreBloc.recent ? null : _curvedBorderBoxDecoration,
+          decoration: _highScoreBloc.highScoreType == HighScoreType.allTime ? _curvedBorderBoxDecoration : null,
       child: FlatButton(
         child: Text('All Time'),
         onPressed: () {
@@ -67,6 +68,19 @@ class HighScoresWidget extends StatelessWidget {
       ),
     );
   }
+
+    Widget _localHighScoresBtn() {
+        return Container(
+          decoration: _highScoreBloc.highScoreType == HighScoreType.local ? _curvedBorderBoxDecoration : null,
+      child: FlatButton(
+        child: Text('Local'),
+        onPressed: () {
+          _highScoreBloc.highScoreEvent.add(GetLocalHighScores());
+        },
+      ),
+    );
+  }
+
 
   Container _highscoresListview(double height, List<HighScore> theScores) {
     return Container(
@@ -98,15 +112,6 @@ class HighScoresWidget extends StatelessWidget {
     );
   }
 
-  RaisedButton _goHomeButton() {
-    return RaisedButton(
-      color: Style.BUTTON_COLOR,
-      padding: Style.BUTTON_PADDING,
-      child: Text('Home', style: Style.BLACK_SUBTITLE_TEXT_STYLE),
-      onPressed: () => _gameBloc.gameButton.add(GoHomeEvent()),
-    );
-  }
-
   Widget _letterIcon(String difficulty) {
     if (difficulty == Difficulty.EASY_STRING)
       return Text('E', style: Style.BLACK_TITLE_TEXT_STYLE);
@@ -119,7 +124,8 @@ class HighScoresWidget extends StatelessWidget {
     return Container();
   }
 
-  String _fromDateTime(DateTime time) {
-    return DateFormat("EEE, MMM d, ''yy").format(time);
+  String _fromDateTime(int time) {
+
+    return DateFormat("EEE, MMM d, ''yy").format(DateTime.fromMillisecondsSinceEpoch(time));
   }
 }

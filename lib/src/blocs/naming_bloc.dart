@@ -3,7 +3,7 @@ import 'dart:async';
 
 class NamingBloc implements BlocBase {
 
-  static String _currentUserName = '';
+  static String _currentUserName;
   String get currentUserName => _currentUserName;
 
   static bool _currentUsernameOk = true;
@@ -12,7 +12,6 @@ class NamingBloc implements BlocBase {
   StreamController<String> _namingStringController =StreamController<String>();
   Stream<String> get namingString => _namingStringController.stream.transform(nameValidator);
   Function(String) get changeName => _namingStringController.sink.add;
-
 
   final nameValidator = StreamTransformer<String, String>.fromHandlers(
     handleData: (name, sink){
@@ -88,7 +87,8 @@ class NamingBloc implements BlocBase {
     'fag',
     'faggot',
     'fuck',
-    'Fuckoff',
+    'fucker',
+    'fuckoff',
     'fuckyou',
     'fuckass',
     'fuckhole',

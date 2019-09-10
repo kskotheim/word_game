@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 
 class HighScore{
 
@@ -8,7 +10,7 @@ class HighScore{
 
   final String name;
   final int score;
-  final DateTime time;
+  final int time;
   final String difficulty;
 
   HighScore({this.name, this.score, this.time, this.difficulty}){
@@ -18,9 +20,30 @@ class HighScore{
     assert(this.difficulty != null);
   }
 
-  Map<String, dynamic> get toJson => {_NAME_STRING:name, _SCORE_STRING:score, _TIME_STRING:time, _DIFFICULTY_STRING:difficulty};
+  static HighScore fromString(String highScore) => fromMap(jsonDecode(highScore));
 
-  static HighScore fromJson(Map<String, dynamic> highscore){
+  static List<String> highscoreListToStringList(List<HighScore> scores){
+    List<String> toReturn = [];
+    scores.forEach((score){
+      toReturn.add(score.toString());
+    });
+    return toReturn;
+  }
+
+  static HighScore fromMap(Map<String, dynamic> highscore){
     return HighScore(name: highscore[_NAME_STRING] ?? '', score: highscore[_SCORE_STRING], time: highscore[_TIME_STRING], difficulty: highscore[_DIFFICULTY_STRING]);
+  }
+
+  Map<String, dynamic> get toMap => {_NAME_STRING:name, _SCORE_STRING:score, _TIME_STRING:time, _DIFFICULTY_STRING:difficulty};
+
+  
+  @override
+  String toString() => jsonEncode(toMap, toEncodable: encodeDateTime);
+
+  dynamic encodeDateTime(dynamic item) {
+    if(item is DateTime) {
+      return item.toIso8601String();
+    }
+    return item;
   }
 }
